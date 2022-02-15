@@ -1,0 +1,19 @@
+# compiled files and executables
+**/target/**
+wallets/*
+Cargo.lock
+
+# vscode config
+.vscode
+
+# elrond
+**/node_modules
+**/output/**
+**/testnet/**
+**/*.interaction.json
+
+# python
+**/__pycache__/**
+
+# others
+*.pem
