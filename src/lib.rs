@@ -1,11 +1,9 @@
 #![no_std]
 
 elrond_wasm::imports!();
-use hex_literal::hex;
 
 mod pause;
 
-pub const ESDT_SYSTEM_SC_BURN_ADDRESS_ARRAY: [u8; 32] = hex!("6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7ad6e7a");
 
 #[elrond_wasm::contract]
 pub trait Distribution: pause::PauseModule {
@@ -62,9 +60,7 @@ pub trait Distribution: pause::PauseModule {
         self.send().direct(&caller, &dist_token_id, 0, &amount, &[]);
 
         Ok(())
-    }
-
-    
+    }  
 
     #[only_owner]
     #[endpoint(burn)]
@@ -74,10 +70,8 @@ pub trait Distribution: pause::PauseModule {
 
         require!(balance >= amount, "not enough tokens to burn");
 
-        let burn_address = ManagedAddress::new_from_bytes(&ESDT_SYSTEM_SC_BURN_ADDRESS_ARRAY);
-
-        // send tokens to burn address to burn
-        self.send().direct(&burn_address, &dist_token_id, 0, &amount, &[]);
+        // before local burn, ESDTRoleLocalBurn should be given to this contract address
+        self.send().esdt_local_burn(&dist_token_id, 0, &amount);
 
         Ok(())
     }
